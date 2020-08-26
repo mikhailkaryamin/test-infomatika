@@ -14,6 +14,9 @@ parserOptions:
 
 plugins: ['react', 'jsx-a11y','react-hooks', 'import']
 
-settings: 
+settings:
   react:
-    version: '16'
+    version: 'detect'
+
+rules:
+  react/jsx-fragments: ['off', 'syntax']

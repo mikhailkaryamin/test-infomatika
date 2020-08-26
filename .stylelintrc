@@ -5,7 +5,7 @@
   ],
   "rules": {
     "declaration-no-important": true,
-    "indentation": "tab",
+    "indentation": 2,
     "order/properties-order": [
       [
       "content",

@@ -1,0 +1,12 @@
+.header-link {
+
+  &:hover {
+    color: red;
+    transition: .5s;
+  }
+}
+
+.header-link:hover > .header-link__icon {
+  fill: red;
+  transition: .5s;
+}

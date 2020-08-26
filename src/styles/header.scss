@@ -1,0 +1,21 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.header__navigation {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+}
+
+.header__list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  list-style: none;
+}

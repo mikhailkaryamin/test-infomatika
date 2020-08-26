@@ -6,6 +6,17 @@
   "rules": {
     "declaration-no-important": true,
     "indentation": 2,
+    "at-rule-empty-line-before": [
+      "always",
+      {
+        "except": [
+          "after-same-name",
+        ],
+        "ignore": [
+          "after-comment"
+        ]
+      }
+    ],
     "order/properties-order": [
       [
       "content",

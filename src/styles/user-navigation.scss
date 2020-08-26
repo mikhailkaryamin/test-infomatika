@@ -1,0 +1,32 @@
+.user-navigation {
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  width: 200px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 20px;
+}
+
+.user-navigation__item {
+  width: 80px;
+
+  &--menu {
+    text-align: right;
+  }
+}
+
+.user-navigation__link {
+  position: relative;
+  padding-left: 30px;
+}
+
+.user-navigation__sign-in-icon {
+  position: absolute;
+  left: 0;
+  fill: #ffffff;
+}
+
+.user-navigation__menu-icon {
+  fill: #ffffff;
+}

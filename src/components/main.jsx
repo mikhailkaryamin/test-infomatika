@@ -1,30 +1,55 @@
 import React from 'react';
 
+import Hexagon from './hexagon';
+
+const MATCHES_LIST = [
+  {
+    date: '30 сентября',
+    time: '9.00',
+    place: 'Стадион',
+    rivalFirst: 'Соперник1',
+    rivalSecond: 'Соперник2',
+  }, {
+    date: '12 сентября',
+    time: '21.00',
+    place: 'Стадион',
+    rivalFirst: 'Соперник1',
+    rivalSecond: 'Соперник2',
+  }, {
+    date: '11 сентября',
+    time: '23.00',
+    place: 'Стадион',
+    rivalFirst: 'Соперник1',
+    rivalSecond: 'Соперник2',
+  }, {
+    date: '17 сентября',
+    time: '21.00',
+    place: 'Стадион',
+    rivalFirst: 'Соперник1',
+    rivalSecond: 'Соперник2',
+  }, {
+    date: '8 сентября',
+    time: '16.00',
+    place: 'Стадион',
+    rivalFirst: 'Соперник1',
+    rivalSecond: 'Соперник2',
+  }];
+
+function getMarkupEventsList() {
+  return (
+    MATCHES_LIST.map((match) => (
+      <li key={`${match.place}${match.date}`} className="events__item">
+        <Hexagon match={match} />
+      </li>
+    ))
+  );
+}
+
 function Main() {
   return (
     <main className="page-main">
       <ul className="events">
-        <li className="events__item">
-          30 сентября
-        </li>
-        <li className="events__item">
-          16 июля
-        </li>
-        <li className="events__item events__item--focus">
-          <div className="rival-1">
-            Соперник №1
-          </div>
-          26 июня
-          <div className="rival-2">
-            Соперник №2
-          </div>
-        </li>
-        <li className="events__item">
-          17 июня
-        </li>
-        <li className="events__item">
-          30 мая
-        </li>
+        {getMarkupEventsList()}
       </ul>
     </main>
   );

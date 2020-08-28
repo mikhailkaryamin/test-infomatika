@@ -35,10 +35,12 @@ const MATCHES_LIST = [
     rivalSecond: 'Соперник2',
   }];
 
+const PREFIXES = ['--first', '--second', '--third', '--fourth', '--fifth'];
+
 function getMarkupEventsList() {
   return (
-    MATCHES_LIST.map((match) => (
-      <li key={`${match.place}${match.date}`} className="events__item">
+    MATCHES_LIST.map((match, i) => (
+      <li key={`${match.place}${match.date}`} className={`main__event main__event${PREFIXES[i]}`}>
         <Hexagon match={match} />
       </li>
     ))
@@ -47,9 +49,9 @@ function getMarkupEventsList() {
 
 function Main() {
   return (
-    <main className="page-main">
-      <ul className="events">
-        <Hexagon match={MATCHES_LIST[1]} />
+    <main className="main">
+      <ul className="main__events">
+        {getMarkupEventsList()}
       </ul>
     </main>
   );

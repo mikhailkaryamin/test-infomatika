@@ -10,10 +10,11 @@
       "always",
       {
         "except": [
-          "after-same-name",
+          "first-nested",
         ],
         "ignore": [
-          "after-comment"
+          "after-comment",
+          "blockless-after-same-name-blockless",
         ]
       }
     ],

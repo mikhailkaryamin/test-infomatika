@@ -49,7 +49,7 @@ function Main() {
   return (
     <main className="page-main">
       <ul className="events">
-        {getMarkupEventsList()}
+        <Hexagon match={MATCHES_LIST[1]} />
       </ul>
     </main>
   );

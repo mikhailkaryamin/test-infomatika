@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Hexagon from './hexagon';
 
@@ -38,8 +38,10 @@ const MATCHES_LIST = [
 const PREFIXES = ['--first', '--second', '--third', '--fourth', '--fifth'];
 
 function getMarkupEventsList() {
+  const [matchesList, setMatchesList] = useState(MATCHES_LIST);
+
   return (
-    MATCHES_LIST.map((match, i) => (
+    matchesList.map((match, i) => (
       <li key={`${match.place}${match.date}`} className={`main__event main__event${PREFIXES[i]}`}>
         <Hexagon match={match} />
       </li>
@@ -48,13 +50,18 @@ function getMarkupEventsList() {
 }
 
 function Main() {
+  const [matchesList, setMatchesList] = useState(MATCHES_LIST);
   return (
     <main className="main">
       <ul className="main__events">
-        {getMarkupEventsList()}
+        <li className="main__event main__event--third">
+          <Hexagon match={matchesList[2]} />
+        </li>
       </ul>
     </main>
   );
 }
 
 export default Main;
+
+{/* 250-216*/}

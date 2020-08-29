@@ -1,26 +1,30 @@
 .main__events {
+  max-width: 1500px;
   list-style: none;
 }
 
 .main__event {
+  position: relative;
+  display: flex;
+  width: max(22vw, 190px);
 
   &--first {
-    margin-left: calc(80% - 122px);
+    left: calc(80% - 122px);
   }
 
   &--second {
-    margin-left: calc(65% - 122px);
+    left: calc(65% - 122px);
   }
 
   &--third {
-    margin-left: calc(50% - 122px);
+    left: calc(50% - 122px);
   }
 
   &--fourth {
-    margin-left: calc(35% - 122px);
+    left: calc(35% - 122px);
   }
 
   &--fifth {
-    margin-left: calc(20% - 122px);
+    left: calc(20% - 122px);
   }
 }

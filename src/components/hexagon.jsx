@@ -1,39 +1,46 @@
 import React from 'react';
+import { shape, string } from 'prop-types';
 import ButtonBuy from './button-buy';
 
-function Hexagon({match}) {
+function Hexagon({ match }) {
   const isMain = match.date === '11 сентября';
 
   return (
     <div className="hexagon-wrapper">
-      <div className="hexagon">
+      <div className="hexagon hexagon--main">
         <div className="hexagon__info">
 
           {isMain && (
-            <span className="hexagon__info-place">
+            <span className="hexagon__info-place hexagon__info-place--main">
               {match.place}
             </span>
           )}
 
-          <span className="hexagon__info-date">
+          <span className="hexagon__info-date hexagon__info-date--main">
             {match.date}
           </span>
 
           {isMain && (
             <React.Fragment>
-              <span className="hexagon__info-time">
+              <span className="hexagon__info-time hexagon__info-time--main">
                 {match.time}
               </span>
               <ButtonBuy />
             </React.Fragment>
           )}
         </div>
-        <div className="hexagon__face1" />
-        <div className="hexagon__face2" />
       </div>
     </div>
 
   );
 }
+
+Hexagon.propTypes = {
+  match: shape({
+    date: string,
+    place: string,
+    time: string,
+  }).isRequired,
+};
 
 export default Hexagon;

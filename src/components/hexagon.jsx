@@ -7,7 +7,7 @@ function Hexagon({ match }) {
 
   return (
     <div className="hexagon-wrapper">
-      <div className="hexagon hexagon--main">
+      <div className={`hexagon hexagon--${match.size}`}>
         <div className="hexagon__info">
 
           {isMain && (
@@ -16,7 +16,7 @@ function Hexagon({ match }) {
             </span>
           )}
 
-          <span className="hexagon__info-date hexagon__info-date--main">
+          <span className={`hexagon__info-date hexagon__info-date--${match.size}`}>
             {match.date}
           </span>
 

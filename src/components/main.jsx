@@ -9,30 +9,35 @@ const MATCHES_LIST = [
     place: 'Стадион',
     rivalFirst: 'Соперник1',
     rivalSecond: 'Соперник2',
+    size: 'small',
   }, {
     date: '12 августа',
     time: '21.00',
     place: 'Стадион',
     rivalFirst: 'Соперник1',
     rivalSecond: 'Соперник2',
+    size: 'middle',
   }, {
     date: '11 сентября',
     time: '23.00',
     place: 'Стадион',
     rivalFirst: 'Соперник1',
     rivalSecond: 'Соперник2',
+    size: 'main',
   }, {
     date: '17 сентября',
     time: '21.00',
     place: 'Стадион',
     rivalFirst: 'Соперник1',
     rivalSecond: 'Соперник2',
+    size: 'middle',
   }, {
     date: '28 сентября',
     time: '16.00',
     place: 'Стадион',
     rivalFirst: 'Соперник1',
     rivalSecond: 'Соперник2',
+    size: 'small',
   }];
 
 const PREFIXES = ['--first', '--second', '--third', '--fourth', '--fifth'];
@@ -54,14 +59,10 @@ function Main() {
   return (
     <main className="main">
       <ul className="main__events">
-        <li className="main__event main__event--third">
-          <Hexagon match={matchesList[2]} />
-        </li>
+        {getMarkupEventsList()}
       </ul>
     </main>
   );
 }
 
 export default Main;
-
-{/* 250-216*/}

@@ -6,7 +6,7 @@
 .main__event {
   position: relative;
   display: flex;
-  width: max(22vw, 190px);
+  width: clamp(190px, 22vw, 250px);
 
   &--first {
     left: calc(80% - 122px);

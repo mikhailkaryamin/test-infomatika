@@ -1,17 +1,22 @@
 import React from 'react';
 import { shape, string } from 'prop-types';
+import { motion } from 'framer-motion';
+
 import ButtonBuy from './button-buy';
 
 function Hexagon({ match }) {
   const isMain = match.date === '11 сентября';
 
   return (
-    <div className="hexagon-wrapper">
+    <motion.div
+      className="hexagon-wrapper"
+
+    >
       <div className={`hexagon hexagon--${match.size}`}>
         <div className="hexagon__info">
 
           {isMain && (
-            <span className="hexagon__info-place hexagon__info-place--main">
+            <span className="hexagon__info-place">
               {match.place}
             </span>
           )}
@@ -22,7 +27,7 @@ function Hexagon({ match }) {
 
           {isMain && (
             <React.Fragment>
-              <span className="hexagon__info-time hexagon__info-time--main">
+              <span className="hexagon__info-time">
                 {match.time}
               </span>
               <ButtonBuy />
@@ -30,7 +35,7 @@ function Hexagon({ match }) {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
 
   );
 }

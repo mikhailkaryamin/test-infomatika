@@ -1,18 +1,15 @@
 import React from 'react';
-import { shape, string } from 'prop-types';
-import { motion } from 'framer-motion';
+import { shape, string, bool } from 'prop-types';
 
 import ButtonBuy from './button-buy';
 
-function Hexagon({ match }) {
-  const isMain = match.date === '11 сентября';
-
+function Hexagon({ match, isMain, prefix }) {
   return (
-    <motion.div
+    <div
       className="hexagon-wrapper"
 
     >
-      <div className={`hexagon hexagon--${match.size}`}>
+      <div className={`hexagon hexagon--${prefix}`}>
         <div className="hexagon__info">
 
           {isMain && (
@@ -21,7 +18,7 @@ function Hexagon({ match }) {
             </span>
           )}
 
-          <span className={`hexagon__info-date hexagon__info-date--${match.size}`}>
+          <span className={`hexagon__info-date hexagon__info-date--${prefix}`}>
             {match.date}
           </span>
 
@@ -35,17 +32,19 @@ function Hexagon({ match }) {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
 
   );
 }
 
 Hexagon.propTypes = {
+  isMain: bool.isRequired,
   match: shape({
     date: string,
     place: string,
     time: string,
   }).isRequired,
+  prefix: string.isRequired,
 };
 
 export default Hexagon;

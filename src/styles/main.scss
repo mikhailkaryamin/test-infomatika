@@ -1,40 +1,44 @@
 .main__events {
+  position: relative;
+  display: block;
   width: 1000px;
+  height: 800px;
   margin: 0 auto;
   padding: 0;
   list-style: none;
 }
 
 .main__event {
-  position: relative;
+  position: absolute;
   display: flex;
 
   &--first {
+    top: 125px;
     left: 785px;
     width: 138px;
-    margin-bottom: -60px;
   }
 
   &--second {
+    top: 185px;
     left: 635px;
     width: 175px;
-    margin-bottom: -75px;
   }
 
   &--third {
+    top: 261px;
     left: 375px;
     width: 320px;
   }
 
   &--fourth {
+    top: 460px;
     left: 260px;
     width: 175px;
-    margin-top: -75px;
   }
 
   &--fifth {
+    top: 550px;
     left: 145px;
     width: 138px;
-    margin-top: -60px;
   }
 }

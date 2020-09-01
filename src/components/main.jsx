@@ -8,8 +8,8 @@ const DirectionScroll = {
   DOWN: 'DOWN',
 };
 
-const MATCHES_LIST = [
-  {
+const DataMarkup = {
+  MATCHES: [{
     id: 1,
     date: '30 июля',
     time: '9.00',
@@ -44,10 +44,8 @@ const MATCHES_LIST = [
     place: 'Стадион',
     rivalFirst: 'Соперник1',
     rivalSecond: 'Соперник2',
-  }];
-
-const PREFIXES = [
-  {
+  }],
+  PREFIXES: [{
     MAIN_EVENT: 'first',
     HEXAGON: 'small',
   },
@@ -66,68 +64,75 @@ const PREFIXES = [
   {
     MAIN_EVENT: 'fifth',
     HEXAGON: 'small',
-  },
-];
-
-function getMarkupEventsList(matches, prefixes) {
-  console.log(matches, prefixes)
-  return (
-    matches.map((match, i) => (
-      <motion.li
-        key={`${match.id}`}
-        className={`main__event main__event--${prefixes[i].MAIN_EVENT}`}
-        layoutId={`${match.place}${match.date}`}
-        transition={{ duration: 1 }}
-      >
-        <Hexagon
-          match={match}
-          prefix={prefixes[i].HEXAGON}
-        />
-      </motion.li>
-    ))
-  );
-}
+  }],
+};
 
 function Main() {
-  const [matches, setMatches] = useState(MATCHES_LIST);
-  const [currentDirection, setCurrentDirection] = useState('');
-  const [prefixes, setPrefixes] = useState(PREFIXES);
-  const [startMatches, setStartMatches] = useState(0);
-  const [finishMatches, setFinishMatches] = useState(5);
-  const [startPrefix, setStartPrefix] = useState(0);
-  const [finishPrefix, setFinishPrefix] = useState(5);
-  const [countMatchesDown, setCountMatchesDown] = useState(0);
+  const [currentPositionTopScroll, setCurrentPositionTopScroll] = useState(0);
+  const [currentPositionDownScroll, setCurrentPositionDownScroll] = useState(0);
+
+  const [dataMarkup, setDataMarkup] = useState(DataMarkup);
+
+  function getMarkupEventsList() {
+    return (
+      dataMarkup.MATCHES.map((match, i) => (
+        <motion.li
+          key={`${match.id}`}
+          className={`main__event main__event--${dataMarkup.PREFIXES[i].MAIN_EVENT}`}
+          layoutId={`${match.place}${match.date}`}
+          transition={{ duration: 1 }}
+        >
+          <Hexagon
+            match={match}
+            prefix={dataMarkup.PREFIXES[i].HEXAGON}
+          />
+        </motion.li>
+      ))
+    );
+  }
 
   function getMatchesListScroll(direction) {
-    switch (true) {
-      case direction === DirectionScroll.TOP:
+    let matchesMarkup;
+    let prefixesMarkup;
 
-        setCurrentDirection(DirectionScroll.TOP);
-        setPrefixes(PREFIXES.slice(0, finishPrefix - 1));
-        setMatches(MATCHES_LIST.slice(startMatches + 1, 5));
+    if (direction === DirectionScroll.TOP) {
+      if (currentPositionTopScroll < 0) {
+        matchesMarkup = DataMarkup.MATCHES.filter((el, i) => (
+          i < 5 + (currentPositionTopScroll * -1 - 1)
+        ));
+        prefixesMarkup = DataMarkup.PREFIXES.slice(currentPositionTopScroll * -1 - 1);
+      } else {
+        matchesMarkup = DataMarkup.MATCHES.filter((el, i) => i > currentPositionTopScroll);
+        prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => i < 4 - currentPositionTopScroll);
+      }
 
-        setStartMatches(startMatches + 1);
-        setFinishMatches(finishMatches + 1);
-        setStartPrefix(startPrefix - 1);
-        setFinishPrefix(finishPrefix - 1);
+      setCurrentPositionTopScroll(currentPositionTopScroll + 1);
+      setCurrentPositionDownScroll(currentPositionDownScroll - 1);
 
-        break;
+      setDataMarkup({
+        MATCHES: matchesMarkup,
+        PREFIXES: prefixesMarkup,
+      });
+    }
 
-      case direction === DirectionScroll.DOWN:
+    if (direction === DirectionScroll.DOWN) {
+      if (currentPositionDownScroll < 0) {
+        matchesMarkup = DataMarkup.MATCHES.slice(currentPositionDownScroll * -1 - 1);
+        prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => (
+          i < 5 - (currentPositionDownScroll * -1 - 1)
+        ));
+      } else {
+        matchesMarkup = DataMarkup.MATCHES.filter((el, i) => i < 4 - currentPositionDownScroll);
+        prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => i > currentPositionDownScroll);
+      }
 
-        setCurrentDirection(DirectionScroll.DOWN);
-        setPrefixes(PREFIXES.slice(startPrefix + 1, 5));
-        setMatches(MATCHES_LIST.slice(0, finishMatches - 1));
+      setCurrentPositionDownScroll(currentPositionDownScroll + 1);
+      setCurrentPositionTopScroll(currentPositionTopScroll - 1);
 
-        setStartMatches(startMatches - 1);
-        setFinishMatches(finishMatches - 1);
-        setStartPrefix(startPrefix + 1);
-        setFinishPrefix(finishPrefix + 1);
-
-        break;
-
-      default:
-        setMatches(MATCHES_LIST);
+      setDataMarkup({
+        MATCHES: matchesMarkup,
+        PREFIXES: prefixesMarkup,
+      });
     }
   }
 
@@ -146,7 +151,7 @@ function Main() {
           className="main__events"
           onWheel={handleToggle}
         >
-          {getMarkupEventsList(matches, prefixes)}
+          {getMarkupEventsList()}
         </ul>
       </AnimateSharedLayout>
     </main>

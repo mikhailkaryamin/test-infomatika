@@ -68,12 +68,12 @@ const DataMarkup = {
 };
 
 function Main() {
-  const [currentPositionTopScroll, setCurrentPositionTopScroll] = useState(0);
-  const [currentPositionDownScroll, setCurrentPositionDownScroll] = useState(0);
-
+  const [positionScroll, setPositionScroll] = useState(0);
   const [dataMarkup, setDataMarkup] = useState(DataMarkup);
 
   function getMarkupEventsList() {
+    console.log(positionScroll)
+
     return (
       dataMarkup.MATCHES.map((match, i) => (
         <motion.li
@@ -85,6 +85,7 @@ function Main() {
           <Hexagon
             match={match}
             prefix={dataMarkup.PREFIXES[i].HEXAGON}
+            isMain={dataMarkup.PREFIXES[i].HEXAGON === 'main'}
           />
         </motion.li>
       ))
@@ -92,54 +93,61 @@ function Main() {
   }
 
   function getMatchesListScroll(direction) {
+    const COUNT_SHOW_MATCHES = 5;
+
+    const isScrollDown = direction === DirectionScroll.DOWN;
+    const isScrollTop = direction === DirectionScroll.TOP;
+
+    const nextPositionScrollAboveZero = positionScroll + (isScrollTop ? 1 : -1);
+    const nextPositionScrollBelowZero = positionScroll * -1 + (isScrollTop ? -1 : 1);
+
     let matchesMarkup;
     let prefixesMarkup;
 
-    if (direction === DirectionScroll.TOP) {
-      if (currentPositionTopScroll < 0) {
-        matchesMarkup = DataMarkup.MATCHES.filter((el, i) => (
-          i < 5 + (currentPositionTopScroll * -1 - 1)
-        ));
-        prefixesMarkup = DataMarkup.PREFIXES.slice(currentPositionTopScroll * -1 - 1);
-      } else {
-        matchesMarkup = DataMarkup.MATCHES.filter((el, i) => i > currentPositionTopScroll);
-        prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => i < 4 - currentPositionTopScroll);
-      }
-
-      setCurrentPositionTopScroll(currentPositionTopScroll + 1);
-      setCurrentPositionDownScroll(currentPositionDownScroll - 1);
-
-      setDataMarkup({
-        MATCHES: matchesMarkup,
-        PREFIXES: prefixesMarkup,
-      });
+    function cutTopMatches(nextPositionScroll) {
+      matchesMarkup = DataMarkup.MATCHES.filter((el, i) => (
+        i < COUNT_SHOW_MATCHES - nextPositionScroll
+      ));
+      prefixesMarkup = DataMarkup.PREFIXES.slice(nextPositionScroll);
     }
 
-    if (direction === DirectionScroll.DOWN) {
-      if (currentPositionDownScroll < 0) {
-        matchesMarkup = DataMarkup.MATCHES.slice(currentPositionDownScroll * -1 - 1);
-        prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => (
-          i < 5 - (currentPositionDownScroll * -1 - 1)
-        ));
-      } else {
-        matchesMarkup = DataMarkup.MATCHES.filter((el, i) => i < 4 - currentPositionDownScroll);
-        prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => i > currentPositionDownScroll);
-      }
-
-      setCurrentPositionDownScroll(currentPositionDownScroll + 1);
-      setCurrentPositionTopScroll(currentPositionTopScroll - 1);
-
-      setDataMarkup({
-        MATCHES: matchesMarkup,
-        PREFIXES: prefixesMarkup,
-      });
+    function cutDownMatches(nextPositionScroll) {
+      matchesMarkup = DataMarkup.MATCHES.slice(nextPositionScroll);
+      prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => (
+        i < COUNT_SHOW_MATCHES - nextPositionScroll
+      ));
     }
+
+    if (isScrollTop) {
+      if (positionScroll < 0) {
+        cutTopMatches(nextPositionScrollBelowZero);
+      } else {
+        cutDownMatches(nextPositionScrollAboveZero);
+      }
+    }
+
+    if (isScrollDown) {
+      if (positionScroll > 0) {
+        cutDownMatches(nextPositionScrollAboveZero);
+      } else {
+        cutTopMatches(nextPositionScrollBelowZero);
+      }
+    }
+
+    setPositionScroll(isScrollTop ? positionScroll + 1 : positionScroll - 1);
+
+    setDataMarkup({
+      MATCHES: matchesMarkup,
+      PREFIXES: prefixesMarkup,
+    });
   }
 
   function handleToggle(evt) {
     if (evt.deltaY > 0) {
-      getMatchesListScroll(DirectionScroll.TOP);
-    } else {
+      if (positionScroll < 2) {
+        getMatchesListScroll(DirectionScroll.TOP);
+      }
+    } else if (positionScroll > -2) {
       getMatchesListScroll(DirectionScroll.DOWN);
     }
   }

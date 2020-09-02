@@ -7,7 +7,6 @@ function Hexagon({ match, isMain, prefix }) {
   return (
     <div
       className="hexagon-wrapper"
-
     >
       <div className={`hexagon hexagon--${prefix}`}>
         <div className="hexagon__info">

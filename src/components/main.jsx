@@ -3,11 +3,6 @@ import { motion, AnimateSharedLayout } from 'framer-motion';
 
 import Hexagon from './hexagon';
 
-const DirectionScroll = {
-  TOP: 'TOP',
-  DOWN: 'DOWN',
-};
-
 const DataMarkup = {
   MATCHES: [{
     id: 1,
@@ -65,90 +60,75 @@ const DataMarkup = {
     MAIN_EVENT: 'fifth',
     HEXAGON: 'small',
   }],
+  INDEXES: [-2, -1, 0, 1, 2],
 };
 
 function Main() {
   const [positionScroll, setPositionScroll] = useState(0);
-  const [dataMarkup, setDataMarkup] = useState(DataMarkup);
 
-  function getMarkupEventsList() {
-    console.log(positionScroll)
-
+  function getMarkupEventsList(matchesRenderData) {
     return (
-      dataMarkup.MATCHES.map((match, i) => (
+      matchesRenderData.MATCHES.map((match, i) => (
         <motion.li
           key={`${match.id}`}
-          className={`main__event main__event--${dataMarkup.PREFIXES[i].MAIN_EVENT}`}
+          className={`main__event main__event--${matchesRenderData.PREFIXES[i].MAIN_EVENT}`}
           layoutId={`${match.place}${match.date}`}
           transition={{ duration: 1 }}
+          onClick={() => setPositionScroll(matchesRenderData.INDEXES[i])}
         >
           <Hexagon
             match={match}
-            prefix={dataMarkup.PREFIXES[i].HEXAGON}
-            isMain={dataMarkup.PREFIXES[i].HEXAGON === 'main'}
+            prefix={matchesRenderData.PREFIXES[i].HEXAGON}
+            isMain={matchesRenderData.PREFIXES[i].HEXAGON === 'main'}
           />
         </motion.li>
       ))
     );
   }
 
-  function getMatchesListScroll(direction) {
-    const COUNT_SHOW_MATCHES = 5;
+  function getMatchesRenderData() {
+    const invertPosition = positionScroll * -1;
 
-    const isScrollDown = direction === DirectionScroll.DOWN;
-    const isScrollTop = direction === DirectionScroll.TOP;
+    const dateMarkup = {
+      MATCHES: [],
+      PREFIXES: [],
+      INDEXES: [],
+    };
 
-    const nextPositionScrollAboveZero = positionScroll + (isScrollTop ? 1 : -1);
-    const nextPositionScrollBelowZero = positionScroll * -1 + (isScrollTop ? -1 : 1);
-
-    let matchesMarkup;
-    let prefixesMarkup;
-
-    function cutTopMatches(nextPositionScroll) {
-      matchesMarkup = DataMarkup.MATCHES.filter((el, i) => (
-        i < COUNT_SHOW_MATCHES - nextPositionScroll
-      ));
-      prefixesMarkup = DataMarkup.PREFIXES.slice(nextPositionScroll);
+    if (positionScroll === 0) {
+      return DataMarkup;
     }
 
-    function cutDownMatches(nextPositionScroll) {
-      matchesMarkup = DataMarkup.MATCHES.slice(nextPositionScroll);
-      prefixesMarkup = DataMarkup.PREFIXES.filter((el, i) => (
-        i < COUNT_SHOW_MATCHES - nextPositionScroll
-      ));
+    function cutTopMatches() {
+      dateMarkup.MATCHES = DataMarkup.MATCHES.slice(0, positionScroll);
+      dateMarkup.PREFIXES = DataMarkup.PREFIXES.slice(invertPosition);
+      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(invertPosition);
     }
 
-    if (isScrollTop) {
-      if (positionScroll < 0) {
-        cutTopMatches(nextPositionScrollBelowZero);
-      } else {
-        cutDownMatches(nextPositionScrollAboveZero);
-      }
+    function cutDownMatches() {
+      dateMarkup.MATCHES = DataMarkup.MATCHES.slice(positionScroll);
+      dateMarkup.PREFIXES = DataMarkup.PREFIXES.slice(0, invertPosition);
+      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(0, invertPosition);
     }
 
-    if (isScrollDown) {
-      if (positionScroll > 0) {
-        cutDownMatches(nextPositionScrollAboveZero);
-      } else {
-        cutTopMatches(nextPositionScrollBelowZero);
-      }
+    if (positionScroll < 0) {
+      cutTopMatches();
     }
 
-    setPositionScroll(isScrollTop ? positionScroll + 1 : positionScroll - 1);
+    if (positionScroll > 0) {
+      cutDownMatches();
+    }
 
-    setDataMarkup({
-      MATCHES: matchesMarkup,
-      PREFIXES: prefixesMarkup,
-    });
+    return (dateMarkup);
   }
 
-  function handleToggle(evt) {
+  function handleWheel(evt) {
     if (evt.deltaY > 0) {
       if (positionScroll < 2) {
-        getMatchesListScroll(DirectionScroll.TOP);
+        setPositionScroll(positionScroll + 1);
       }
     } else if (positionScroll > -2) {
-      getMatchesListScroll(DirectionScroll.DOWN);
+      setPositionScroll(positionScroll - 1);
     }
   }
 
@@ -157,9 +137,9 @@ function Main() {
       <AnimateSharedLayout>
         <ul
           className="main__events"
-          onWheel={handleToggle}
+          onWheel={handleWheel}
         >
-          {getMarkupEventsList()}
+          {getMarkupEventsList(getMatchesRenderData())}
         </ul>
       </AnimateSharedLayout>
     </main>

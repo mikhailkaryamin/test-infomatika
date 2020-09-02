@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimateSharedLayout } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Hexagon from './hexagon';
 
@@ -68,21 +68,26 @@ function Main() {
 
   function getMarkupEventsList(matchesRenderData) {
     return (
-      matchesRenderData.MATCHES.map((match, i) => (
-        <motion.li
-          key={`${match.id}`}
-          className={`main__event main__event--${matchesRenderData.PREFIXES[i].MAIN_EVENT}`}
-          layoutId={`${match.place}${match.date}`}
-          transition={{ duration: 1 }}
-          onClick={() => setPositionScroll(matchesRenderData.INDEXES[i])}
-        >
-          <Hexagon
-            match={match}
-            prefix={matchesRenderData.PREFIXES[i].HEXAGON}
-            isMain={matchesRenderData.PREFIXES[i].HEXAGON === 'main'}
-          />
-        </motion.li>
-      ))
+      <AnimatePresence initial={false}>
+        {matchesRenderData.MATCHES.map((match, i) => (
+          <motion.li
+            key={`${match.id}`}
+            className={`main__event main__event--${matchesRenderData.PREFIXES[i].MAIN_EVENT}`}
+            onClick={() => setPositionScroll(matchesRenderData.INDEXES[i])}
+            layoutId={`${match.place}${match.date}`}
+            transition={{ duration: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Hexagon
+              match={match}
+              prefix={matchesRenderData.PREFIXES[i].HEXAGON}
+              isMain={matchesRenderData.PREFIXES[i].HEXAGON === 'main'}
+            />
+          </motion.li>
+        ))}
+      </AnimatePresence>
     );
   }
 
@@ -102,13 +107,13 @@ function Main() {
     function cutTopMatches() {
       dateMarkup.MATCHES = DataMarkup.MATCHES.slice(0, positionScroll);
       dateMarkup.PREFIXES = DataMarkup.PREFIXES.slice(invertPosition);
-      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(invertPosition);
+      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(0, positionScroll);
     }
 
     function cutDownMatches() {
       dateMarkup.MATCHES = DataMarkup.MATCHES.slice(positionScroll);
       dateMarkup.PREFIXES = DataMarkup.PREFIXES.slice(0, invertPosition);
-      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(0, invertPosition);
+      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(positionScroll);
     }
 
     if (positionScroll < 0) {
@@ -134,14 +139,12 @@ function Main() {
 
   return (
     <main className="main">
-      <AnimateSharedLayout>
-        <ul
-          className="main__events"
-          onWheel={handleWheel}
-        >
-          {getMarkupEventsList(getMatchesRenderData())}
-        </ul>
-      </AnimateSharedLayout>
+      <ul
+        className="main__events"
+        onWheel={handleWheel}
+      >
+        {getMarkupEventsList(getMatchesRenderData())}
+      </ul>
     </main>
   );
 }

@@ -94,7 +94,7 @@ function Main() {
   function getMatchesRenderData() {
     const invertPosition = positionScroll * -1;
 
-    const dateMarkup = {
+    const dataMarkup = {
       MATCHES: [],
       PREFIXES: [],
       INDEXES: [],
@@ -105,15 +105,15 @@ function Main() {
     }
 
     function cutTopMatches() {
-      dateMarkup.MATCHES = DataMarkup.MATCHES.slice(0, positionScroll);
-      dateMarkup.PREFIXES = DataMarkup.PREFIXES.slice(invertPosition);
-      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(0, positionScroll);
+      dataMarkup.MATCHES = DataMarkup.MATCHES.slice(0, positionScroll);
+      dataMarkup.PREFIXES = DataMarkup.PREFIXES.slice(invertPosition);
+      dataMarkup.INDEXES = DataMarkup.INDEXES.slice(0, positionScroll);
     }
 
     function cutDownMatches() {
-      dateMarkup.MATCHES = DataMarkup.MATCHES.slice(positionScroll);
-      dateMarkup.PREFIXES = DataMarkup.PREFIXES.slice(0, invertPosition);
-      dateMarkup.INDEXES = DataMarkup.INDEXES.slice(positionScroll);
+      dataMarkup.MATCHES = DataMarkup.MATCHES.slice(positionScroll);
+      dataMarkup.PREFIXES = DataMarkup.PREFIXES.slice(0, invertPosition);
+      dataMarkup.INDEXES = DataMarkup.INDEXES.slice(positionScroll);
     }
 
     if (positionScroll < 0) {
@@ -124,7 +124,7 @@ function Main() {
       cutDownMatches();
     }
 
-    return (dateMarkup);
+    return (dataMarkup);
   }
 
   function handleWheel(evt) {

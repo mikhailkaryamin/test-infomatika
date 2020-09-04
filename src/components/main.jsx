@@ -170,9 +170,12 @@ function Main() {
   }
 
   function handleWheel(evt) {
-    if (evt.deltaY > 0) {
+    const isFirstMatch = mainMatch.id === MATCHES[0].id;
+    const isLastMatch = mainMatch.id === MATCHES.slice(-1)[0].id;
+
+    if (evt.deltaY > 0 && !isLastMatch) {
       scrollTo(ActionType.SCROLL_TOP);
-    } else {
+    } else if (!isFirstMatch && evt.deltaY < 0) {
       scrollTo(ActionType.SCROLL_DOWN);
     }
   }

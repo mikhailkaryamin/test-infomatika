@@ -1,6 +1,45 @@
 .side-label {
   position: absolute;
-  width: 200px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 325px;
   height: 139px;
+  color: #000000;
+  font-size: 30px;
+  border-radius: 10px;
   background-color: #fff;
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    transform: skew(-30deg);
+    width: 100px;
+    height: 139px;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  &--left {
+    top: 261px;
+    left: 0;
+
+    &::before {
+      top: 0;
+      left: 262px;
+    }
+  }
+
+  &--right {
+    right: 0;
+    bottom: 261px;
+
+    &::before {
+      top: 0;
+      right: 262px;
+
+    }
+  }
 }

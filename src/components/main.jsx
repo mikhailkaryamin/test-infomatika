@@ -91,35 +91,15 @@ const PREFIXES = [{
   HEXAGON: 'small',
 }];
 
+const SideLabePrefix = {
+  LEFT: 'left',
+  RIGHT: 'right',
+};
+
 function Main() {
   const [matches, setMatches] = useState(MATCHES.slice(0, COUNT_SHOW_MATCH));
   const [mainMatch, setMainMatch] = useState(matches[2]);
   const [prefixes, setPrefixes] = useState(PREFIXES);
-
-  function getMarkupEventsList() {
-    return (
-      <AnimatePresence initial={false}>
-        {matches.map((match, i) => (
-          <motion.li
-            key={`${match.id}`}
-            className={`main__event main__event--${prefixes[i].MAIN_EVENT}`}
-            onClick={() => scrollTo(ActionType.CLICK, match.id)}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            initial={{ opacity: 0 }}
-            layoutId={`${match.place}${match.date}`}
-            transition={{ duration: 1 }}
-          >
-            <Hexagon
-              match={match}
-              prefix={prefixes[i].HEXAGON}
-              isMain={prefixes[i].HEXAGON === 'main'}
-            />
-          </motion.li>
-        ))}
-      </AnimatePresence>
-    );
-  }
 
   function scrollTo(action, matchId = mainMatch.id) {
     const MAIN_MATCH_INDEX = MATCHES.findIndex((match) => matchId === match.id);
@@ -146,7 +126,7 @@ function Main() {
       setMainMatch(NEXT_MAIN_MATCH);
     } else {
       matchesForRender = MATCHES.slice(0, COUNT_SHOW_MATCH + nextFirstMatchIndex);
-      console.log(nextFirstMatchIndex, matchesForRender[2 + nextFirstMatchIndex], MATCHES[MAIN_MATCH_INDEX + nextFirstMatchIndex])
+
       const NEXT_MAIN_MATCH = matchesForRender[2 + nextFirstMatchIndex];
 
       setMainMatch(NEXT_MAIN_MATCH);
@@ -164,6 +144,31 @@ function Main() {
     }
   }
 
+  function getMarkupEventsList() {
+    return (
+      <AnimatePresence initial={false}>
+        {matches.map((match, i) => (
+          <motion.li
+            key={`${match.id}`}
+            className={`main__event main__event--${prefixes[i].MAIN_EVENT}`}
+            onClick={() => scrollTo(ActionType.CLICK, match.id)}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            layoutId={`${match.place}${match.date}`}
+            transition={{ duration: 1 }}
+          >
+            <Hexagon
+              match={match}
+              prefix={prefixes[i].HEXAGON}
+              isMain={prefixes[i].HEXAGON === 'main'}
+            />
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    );
+  }
+
   function handleWheel(evt) {
     if (evt.deltaY > 0) {
       scrollTo(ActionType.SCROLL_TOP);
@@ -175,14 +180,20 @@ function Main() {
   return (
     <main className="main">
       <div className="main__wrapper">
-        <SideLabel />
+        <SideLabel
+          prefix={SideLabePrefix.LEFT}
+          teamName={mainMatch.rivalFirst}
+        />
         <ul
           className="main__events"
           onWheel={handleWheel}
         >
           {getMarkupEventsList()}
         </ul>
-        <SideLabel />
+        <SideLabel
+          prefix={SideLabePrefix.RIGHT}
+          teamName={mainMatch.rivalSecond}
+        />
       </div>
     </main>
   );

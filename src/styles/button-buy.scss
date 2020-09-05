@@ -4,11 +4,12 @@
   border: 2px solid;
   border-radius: 5px;
   background: none;
-  transition: color 500ms ease, text-shadow 500ms ease;
+  transition: color 500ms ease, background-color 500ms ease;
   cursor: pointer;
 }
 
 .button-buy:hover {
-  color: #ff0000;
-  text-shadow: 0 0 10px white;
+  color: #fff;
+  border-color: #05426C;
+  background-color: #05426C;
 }

@@ -44,7 +44,8 @@ body {
   line-height: 24px;
   letter-spacing: normal;
   text-align: left;
-  background: #05426C;
+  background: rgb(63,89,251);
+  background: radial-gradient(circle, rgba(63,89,251,1) 0%, rgba(1,0,5,1) 75%); 
 }
 
 a {

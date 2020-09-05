@@ -31,7 +31,7 @@ function getMarkupUserMenu() {
     USER_NAVIGATION_ITEMS.map((item) => (
       <li key={item.prefix} className={`user-navigation__item user-navigation__item--${item.prefix}`}>
         <a href="/" className={`header-link user-navigation__link user-navigation__link--${item.prefix}`}>
-          <svg className="header-link__icon user-navigation__sign-in-icon" width="24" height="24" viewBox="0 0 24 24">
+          <svg className={`header-link__icon user-navigation__${item.prefix}-icon`} width="24" height="24" viewBox="0 0 24 24">
             <use xlinkHref={`#${item.prefix}`} />
           </svg>
           <span className={item.isHiddenTitle ? 'visually-hidden' : ''}>

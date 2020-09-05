@@ -2,11 +2,6 @@
 
   &:hover {
     color: red;
-    transition: color 500ms ease, text-shadow 500ms ease;
+    transition: color 500ms ease;
   }
-}
-
-.header-link:hover > .header-link__icon {
-  fill: red;
-  transition: color 500ms ease, text-shadow 500ms ease;
 }

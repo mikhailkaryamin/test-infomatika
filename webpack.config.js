@@ -1,6 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const devMode = process.env.NODE_ENV !== 'production';
+const isProduction = process.env.NODE_ENV !== 'production';
 const path = require('path');
 
 module.exports = {
@@ -15,6 +15,11 @@ module.exports = {
     historyApiFallback: true,
     port: 8000,
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   module: {
     rules: [
       {
@@ -25,29 +30,29 @@ module.exports = {
         },
       },
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: /\.(sass|scss|css)$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: process.env.NODE_ENV === 'development',
-            },
-          },
+          isProduction
+            ? MiniCssExtractPlugin.loader
+            : 'style-loader',
           'css-loader',
-          'postcss-loader',
-          'sass-loader',
+          'resolve-url-loader',
+          {
+            loader: 'sass-loader',
+            options: { implementation: require('sass') },
+          }
         ],
       },
       {
-        test: /\.(jpe?g|png|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
-        loader: 'url-loader?limit=100000',
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*)?$/,
+        use: ['file-loader'],
       },
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: devMode ? '[name].css' : '[name].[hash].css',
-      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+      filename: isProduction ? '[name].css' : '[name].[hash].css',
+      chunkFilename: isProduction ? '[id].css' : '[id].[hash].css',
     }),
   ],
   resolve: {

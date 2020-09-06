@@ -1,24 +1,72 @@
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isProduction = process.env.NODE_ENV !== 'production';
-const path = require('path');
+
+const CONFIG = {
+  indexHtmlTemplate: './src/index.html',
+  indexJSX: './src/index.jsx',
+  cssEntry: './src/style.scss',
+  outputDir: './deploy',
+  assetDir: './public',
+  publicDir: '/',
+  devServerPort: 8001,
+};
+
+function resolve(filePath) {
+  return path.isAbsolute(filePath) ? filePath : path.join(__dirname, filePath);
+}
+
+const commonPlugins = [
+  new HtmlWebpackPlugin({
+    filename: 'index.html',
+    template: resolve(CONFIG.indexHtmlTemplate),
+  }),
+];
 
 module.exports = {
-  entry: './src/index.jsx',
+  entry: isProduction ? {
+    app: [resolve(CONFIG.indexJSX), resolve(CONFIG.cssEntry)],
+  } : {
+    app: [resolve(CONFIG.indexJSX)],
+    style: [resolve(CONFIG.cssEntry)],
+  },
   output: {
-    filename: 'bundle.js',
-    path: path.join(__dirname, 'public'),
-    publicPath: '/',
+    filename: isProduction ? '[name].[hash].js' : '[name].js',
+    path: resolve(CONFIG.outputDir),
+    publicPath: CONFIG.publicPath,
   },
-  devServer: {
-    contentBase: path.join(__dirname, 'public'),
-    historyApiFallback: true,
-    port: 8000,
-  },
+  mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? 'source-map' : 'eval-source-map',
   optimization: {
     splitChunks: {
       chunks: 'all',
     },
+  },
+  plugins: isProduction
+    ? commonPlugins.concat([
+      new MiniCssExtractPlugin({ filename: 'style.[hash].css' }),
+      new CopyWebpackPlugin({
+        patterns: [{
+          from: resolve(CONFIG.assetDir),
+        }],
+      }),
+    ])
+    : commonPlugins.concat([
+      new webpack.HotModuleReplacementPlugin(),
+    ]),
+  devServer: {
+    contentBase: resolve(CONFIG.assetDir),
+    historyApiFallback: {
+      index: '/',
+    },
+    publicPath: CONFIG.publicPath,
+    port: CONFIG.devServerPort,
+    hot: true,
+    inline: true,
   },
   module: {
     rules: [
@@ -40,7 +88,7 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: { implementation: require('sass') },
-          }
+          },
         ],
       },
       {
@@ -49,12 +97,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: isProduction ? '[name].css' : '[name].[hash].css',
-      chunkFilename: isProduction ? '[id].css' : '[id].[hash].css',
-    }),
-  ],
+
   resolve: {
     extensions: ['.js', '.jsx', '.json', 'scss'],
   },

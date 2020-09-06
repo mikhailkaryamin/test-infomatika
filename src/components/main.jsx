@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTimeout } from 'react-use';
 
 import Hexagon from './hexagon';
 import SideLabel from './side-label';
@@ -100,6 +101,7 @@ function Main() {
   const [matches, setMatches] = useState(MATCHES.slice(0, COUNT_SHOW_MATCH));
   const [mainMatch, setMainMatch] = useState(matches[2]);
   const [prefixes, setPrefixes] = useState(PREFIXES);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   function scrollTo(action, matchId = mainMatch.id) {
     const MAIN_MATCH_INDEX = MATCHES.findIndex((match) => matchId === match.id);
@@ -156,7 +158,7 @@ function Main() {
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             layoutId={`${match.place}${match.date}`}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.8 }}
           >
             <Hexagon
               match={match}
@@ -180,6 +182,8 @@ function Main() {
     }
   }
 
+  const [isReady, , reset] = useTimeout(780);
+
   return (
     <main className="main">
       <div className="main__wrapper">
@@ -189,7 +193,17 @@ function Main() {
         />
         <ul
           className="main__events"
-          onWheel={handleWheel}
+          onWheel={(evt) => {
+            if (firstLoad) {
+              console.log('first')
+              handleWheel(evt);
+              setFirstLoad(false);
+            } else if (isReady()) {
+              handleWheel(evt);
+              console.log('second')
+              reset();
+            }
+          }}
         >
           {getMarkupEventsList()}
         </ul>

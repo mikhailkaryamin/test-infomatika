@@ -12,8 +12,8 @@ Thumbs.db
 node_modules/
 
 #Файлы сборки
-public/
+/public/
 
-!public/index.html
+!/public/index.html
 
 

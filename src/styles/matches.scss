@@ -1,0 +1,43 @@
+.matches {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matches__item {
+  position: absolute;
+  display: flex;
+
+  &--first {
+    top: 125px;
+    left: 750px;
+    width: 138px;
+  }
+
+  &--second {
+    top: 185px;
+    left: 600px;
+    width: 175px;
+  }
+
+  &--third {
+    top: 261px;
+    left: 340px;
+    width: 320px;
+  }
+
+  &--fourth {
+    top: 460px;
+    left: 225px;
+    width: 175px;
+  }
+
+  &--fifth {
+    top: 550px;
+    left: 115px;
+    width: 138px;
+  }
+}

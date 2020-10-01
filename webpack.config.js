@@ -4,16 +4,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const isProduction = process.env.NODE_ENV !== 'production';
+const isProduction = !process.env.WEBPACK_DEV_SERVER;
 
 const CONFIG = {
-  indexHtmlTemplate: './src/index.html',
+  indexHtmlTemplate: './public/index.html',
   indexJSX: './src/index.jsx',
-  cssEntry: './src/style.scss',
-  outputDir: './deploy',
+  outputDir: './build',
   assetDir: './public',
-  publicDir: '/',
-  devServerPort: 8001,
+  publicDirProduct: '/what-to-watch',
+  publicDirDevServer: '/',
+  devServerPort: 8000,
 };
 
 function resolve(filePath) {
@@ -28,19 +28,13 @@ const commonPlugins = [
 ];
 
 module.exports = {
-  entry: isProduction ? {
-    app: [resolve(CONFIG.indexJSX), resolve(CONFIG.cssEntry)],
-  } : {
-    app: [resolve(CONFIG.indexJSX)],
-    style: [resolve(CONFIG.cssEntry)],
-  },
+  entry: './src/index.jsx',
+  mode: isProduction ? 'production' : 'development',
   output: {
     filename: isProduction ? '[name].[hash].js' : '[name].js',
     path: resolve(CONFIG.outputDir),
-    publicPath: CONFIG.publicPath,
+    publicPath: isProduction ? CONFIG.publicDirProduct : CONFIG.publicDirDevServer,
   },
-  mode: isProduction ? 'production' : 'development',
-  devtool: isProduction ? 'source-map' : 'eval-source-map',
   optimization: {
     splitChunks: {
       chunks: 'all',
@@ -52,6 +46,7 @@ module.exports = {
       new CopyWebpackPlugin({
         patterns: [{
           from: resolve(CONFIG.assetDir),
+          to: resolve(CONFIG.outputDir),
         }],
       }),
     ])
@@ -63,7 +58,7 @@ module.exports = {
     historyApiFallback: {
       index: '/',
     },
-    publicPath: CONFIG.publicPath,
+    publicPath: CONFIG.publicDirDevServer,
     port: CONFIG.devServerPort,
     hot: true,
     inline: true,
@@ -97,9 +92,7 @@ module.exports = {
       },
     ],
   },
-
   resolve: {
-    extensions: ['.js', '.jsx', '.json', 'scss'],
+    extensions: ['.js', '.jsx', '.js', 'json']
   },
-  devtool: 'source-map',
 };

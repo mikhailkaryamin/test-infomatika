@@ -12,6 +12,6 @@ Thumbs.db
 node_modules/
 
 #Файлы сборки
-/deploy
+/build
 
 
